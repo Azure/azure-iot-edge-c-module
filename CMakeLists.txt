@@ -36,6 +36,7 @@ target_link_libraries(main
     my_parson
     iothub_client_mqtt_transport
     iothub_client
+    parson
     aziotsharedutil
     umqtt
     pthread
