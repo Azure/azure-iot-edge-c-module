@@ -90,12 +90,12 @@ static IOTHUBMESSAGE_DISPOSITION_RESULT InputQueue1FilterCallback(IOTHUB_MESSAGE
     }
     else
     {
-        // We filter out every other message.  Here we will send on.
         printf("Sending message (%zu) to the next stage in pipeline\n", messagesReceivedByInput1Queue);
 
         clientResult = IoTHubModuleClient_LL_SendEventToOutputAsync(iotHubModuleClientHandle, filteredMessageInstance->messageHandle, "output1", SendConfirmationCallbackFromFilter, (void *)filteredMessageInstance);
         if (clientResult != IOTHUB_CLIENT_OK)
         {
+            IoTHubMessage_Destroy(filteredMessageInstance->messageHandle);
             free(filteredMessageInstance);
             printf("IoTHubModuleClient_LL_SendEventToOutputAsync failed on sending msg#=%zu, err=%d\n", messagesReceivedByInput1Queue, clientResult);
             result = IOTHUBMESSAGE_ABANDONED;
@@ -114,7 +114,7 @@ static IOTHUB_MODULE_CLIENT_LL_HANDLE InitializeConnectionForFilter()
 {
     IOTHUB_MODULE_CLIENT_LL_HANDLE iotHubModuleClientHandle;
 
-    if (platform_init() != 0)
+    if (IoTHub_Init() != 0)
     {
         printf("Failed to initialize the platform.\r\n");
         iotHubModuleClientHandle = NULL;
@@ -125,8 +125,9 @@ static IOTHUB_MODULE_CLIENT_LL_HANDLE InitializeConnectionForFilter()
     }
     else
     {
-        bool trace = true;
-        IoTHubModuleClient_LL_SetOption(iotHubModuleClientHandle, OPTION_LOG_TRACE, &trace);
+        // Uncomment the following lines to enable verbose logging.
+        // bool traceOn = true;
+        // IoTHubModuleClient_LL_SetOption(iotHubModuleClientHandle, OPTION_LOG_TRACE, &trace);
     }
 
     return iotHubModuleClientHandle;
@@ -138,10 +139,10 @@ static void DeInitializeConnectionForFilter(IOTHUB_MODULE_CLIENT_LL_HANDLE iotHu
     {
         IoTHubModuleClient_LL_Destroy(iotHubModuleClientHandle);
     }
-    platform_deinit();
+    IoTHub_Deinit();
 }
 
-static int SetupCallbacksForInputQueues(IOTHUB_MODULE_CLIENT_LL_HANDLE iotHubModuleClientHandle)
+static int SetupCallbacksForModule(IOTHUB_MODULE_CLIENT_LL_HANDLE iotHubModuleClientHandle)
 {
     int ret;
 
@@ -168,18 +169,18 @@ void iothub_module()
     {
         ;
     }
-    else if (SetupCallbacksForInputQueues(iotHubModuleClientHandle) != 0)
+    else if (SetupCallbacksForModule(iotHubModuleClientHandle) != 0)
     {
         ;
     }
     else
     {
         // The receiver just loops constantly waiting for messages.
-        printf("Waiting for incoming messages.  Control-C to stop listener\r\n");
+        printf("Waiting for incoming messages.\r\n");
         while (true)
         {
             IoTHubModuleClient_LL_DoWork(iotHubModuleClientHandle);
-            ThreadAPI_Sleep(1);
+            ThreadAPI_Sleep(100);
         }
     }
 
