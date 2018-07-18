@@ -17,11 +17,6 @@ compileAsC99()
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DUSE_EDGE_MODULES")
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -DUSE_EDGE_MODULES")
 
-add_library(my_parson
-    parson.c
-    parson.h
-)
-
 set(AZUREIOT_INC_FOLDER "/usr/include/azureiot" "/usr/include/azureiot/inc")
 
 include_directories(${AZUREIOT_INC_FOLDER})
@@ -33,7 +28,6 @@ set(main_c_files
 add_executable(main ${main_c_files})
 
 target_link_libraries(main
-    my_parson
     iothub_client_mqtt_transport
     iothub_client
     parson
