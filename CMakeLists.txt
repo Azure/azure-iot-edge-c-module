@@ -31,15 +31,15 @@ target_link_libraries(main
     iothub_client_mqtt_transport
     iothub_client
     parson
-    aziotsharedutil
     umqtt
+    prov_auth_client
+    hsm_security_client
+    uhttp
+    aziotsharedutil
     pthread
     curl
     ssl
     crypto
     m
-    prov_auth_client
-    hsm_security_client
-    uhttp
     uuid
 )
