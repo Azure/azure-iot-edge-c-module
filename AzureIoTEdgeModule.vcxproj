@@ -150,9 +150,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="BuildWindowsDebugContainer.cmd" />
     <None Include="Dockerfile.amd64" />
     <None Include="Dockerfile.amd64.debug" />
     <None Include="Dockerfile.arm32v7" />
+    <None Include="Dockerfile.windows-amd64.debug" />
     <None Include="module.json" />
   </ItemGroup>
   <ItemGroup>
