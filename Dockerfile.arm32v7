@@ -1,4 +1,4 @@
-FROM arm32v7/ubuntu:xenial AS base
+FROM arm32v7/ubuntu:bionic AS base
 RUN apt-get update && \
     apt-get install -y --no-install-recommends software-properties-common && \
     add-apt-repository -y ppa:aziotsdklinux/ppa-azureiot && \
